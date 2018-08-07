@@ -7,7 +7,21 @@ const SelectView = function (element){
 SelectView.prototype.bindEvents = function () {
   PubSub.subscribe('InstrumentFamilies:all-instruments', (evt) => {
     const allInstruments = evt.detail;
-    console.log(allInstruments);
+    this.populate(allInstruments);
+  });
+
+  this.element.addEventListener('change', (evt) => {
+    const selectedIndex = evt.target.value;
+    PubSub.publish('SelectView:change', selectedIndex);
+  });
+};
+
+SelectView.prototype.populate = function (instrumentInfo) {
+  instrumentInfo.forEach((instrument, index) => {
+    const option = document.createElement('option');
+    option.textContent = instrument.name;
+    option.value = index;
+    this.element.appendChild(option);
   })
 };
 
